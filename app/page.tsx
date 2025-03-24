@@ -8,8 +8,57 @@ import { AuroraText } from "@/components/magicui/aurora-text"
 import { motion } from "framer-motion"
 import { BlackToLimeLink } from "@/components/animatedBLink"
 import FixedScrollReveal from "@/components/scrollReveal"
+import { AccountSelection } from "@/components/accountS"
+import Asset from "@/components/asset"
 
 export default function Home() {
+
+  const accountOptions = [
+    {
+      id: "raw",
+      name: "Raw",
+      description: "Suggestive for Scalping",
+      minimumDeposit: "$1,000",
+      features: [
+        { text: "Minimum Deposit: $1,000" },
+        { text: "Competitive commission" },
+        { text: "Tight spread" },
+        { text: "Swap: Yes" },
+        { text: "Leverage 50 to 500" },
+        { text: "Currencies: USD" },
+      ],
+    },
+    {
+      id: "standard",
+      name: "Standard",
+      description: "Suggestive for Institution or HNIs",
+      minimumDeposit: "$100",
+      isHighlighted: true,
+      features: [
+        { text: "Minimum Deposit: $100" },
+        { text: "$0 commissions" },
+        { text: "Spread: 18 to 25" },
+        { text: "Swap: No" },
+        { text: "Leverage 50 to 500" },
+        { text: "Currencies: USD" },
+      ],
+    },
+    {
+      id: "plus",
+      name: "Plus",
+      description: "Suggestive for Individual traders",
+      minimumDeposit: "$10",
+      features: [
+        { text: "Minimum Deposit: $10" },
+        { text: "$0 commissions" },
+        { text: "Spread: 25 to 30" },
+        { text: "Swap: No" },
+        { text: "Leverage 50 to 500" },
+        { text: "Currencies: USD" },
+      ],
+    },
+  ]
+
   const contentItems = [
     {
       title: "Big Moves Are Happening.",
@@ -226,12 +275,18 @@ export default function Home() {
           </motion.div>
         </motion.section>
         
-        {/* Added Fixed Scroll Reveal component */}
+        {/* Fixed Scroll Reveal section with adjusted link */}
         <motion.div 
-          className="mt-20 " 
+          className="mt-20 mb-20"
           variants={itemVariants}
         >
           <FixedScrollReveal />
+          <div className="flex justify-center mt-10">
+            <AnimatedLink href="#">Open an account</AnimatedLink>
+          </div>
+
+          <AccountSelection options={accountOptions} />
+          <Asset/>
         </motion.div>
       </motion.main>
     </div>

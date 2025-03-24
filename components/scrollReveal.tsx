@@ -45,7 +45,6 @@ export default function FixedScrollReveal() {
     const handleScroll = () => {
       if (!containerRef.current) return
       
-      const containerRect = containerRef.current.getBoundingClientRect()
       const containerOffsetTop = containerRef.current.offsetTop
       const scrollY = window.scrollY
       
