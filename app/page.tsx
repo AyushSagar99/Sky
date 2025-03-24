@@ -7,6 +7,7 @@ import StatCard from "@/components/tCard"
 import { AuroraText } from "@/components/magicui/aurora-text"
 import { motion } from "framer-motion"
 import { BlackToLimeLink } from "@/components/animatedBLink"
+import FixedScrollReveal from "@/components/scrollReveal"
 
 export default function Home() {
   const contentItems = [
@@ -78,7 +79,7 @@ export default function Home() {
       </div>
 
       {/* Add backdrop filter to navbar for glass effect */}
-      <div className="sticky top-0 ">
+      <div className="sticky top-0 z-50">
         <Navbar />
       </div>
 
@@ -224,9 +225,15 @@ export default function Home() {
             </div>
           </motion.div>
         </motion.section>
+        
+        {/* Added Fixed Scroll Reveal component */}
+        <motion.div 
+          className="mt-20 " 
+          variants={itemVariants}
+        >
+          <FixedScrollReveal />
+        </motion.div>
       </motion.main>
     </div>
   )
 }
-
-// Note: NumberTicker component has been removed as it's not used
