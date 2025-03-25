@@ -12,6 +12,8 @@ import { AccountSelection } from "@/components/accountS"
 import Asset from "@/components/asset"
 import Featured from "@/components/featured"
 import AccountOpening from "@/components/trading"
+import TestimonialsAndGuides from "@/components/testimonial"
+import AnimatedCTA from "@/components/ready"
 
 export default function Home() {
 
@@ -291,6 +293,8 @@ export default function Home() {
           <Asset/>
           <Featured/>
           <AccountOpening/>
+          <TestimonialsAndGuides/>
+          <AnimatedCTA/>
         </motion.div>
       </motion.main>
     </div>
