@@ -10,6 +10,7 @@ import { BlackToLimeLink } from "@/components/animatedBLink"
 import FixedScrollReveal from "@/components/scrollReveal"
 import { AccountSelection } from "@/components/accountS"
 import Asset from "@/components/asset"
+import Featured from "@/components/featured"
 
 export default function Home() {
 
@@ -287,6 +288,7 @@ export default function Home() {
 
           <AccountSelection options={accountOptions} />
           <Asset/>
+          <Featured/>
         </motion.div>
       </motion.main>
     </div>
