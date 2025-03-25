@@ -16,6 +16,7 @@ export default function FixedScrollReveal() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [isFixed, setIsFixed] = useState(false)
   const [hasReachedEnd, setHasReachedEnd] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
 
   // Feature sections data
   const sections: FeatureSection[] = [
@@ -41,8 +42,20 @@ export default function FixedScrollReveal() {
     }
   ]
 
+  // Handle initial load state
+  useEffect(() => {
+    // Delay initialization slightly to ensure DOM is fully loaded
+    const timer = setTimeout(() => {
+      setIsInitialized(true);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   // Handle scroll to change active section and manage fixed position
   useEffect(() => {
+    if (!isInitialized) return;
+
     const handleScroll = () => {
       if (!containerRef.current) return
       
@@ -80,10 +93,19 @@ export default function FixedScrollReveal() {
     }
     
     window.addEventListener('scroll', handleScroll)
-    handleScroll() // Initialize on mount
+    // Initialize on mount, but only after component is initialized
+    handleScroll()
     
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [sections.length])
+    // Force a second check after a slight delay to account for any layout shifts
+    const timer = setTimeout(() => {
+      handleScroll();
+    }, 500);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timer);
+    }
+  }, [sections.length, isInitialized])
 
   return (
     <div 
@@ -91,22 +113,25 @@ export default function FixedScrollReveal() {
       className="relative"
       style={{ 
         height: `${(sections.length * 80)}vh`,
-        marginBottom: "20vh" // Add bottom margin to avoid overlapping with next components
+        marginBottom: "20vh", // Add bottom margin to avoid overlapping with next components
+        opacity: isInitialized ? 1 : 0, // Hide until initialized
+        transition: "opacity 0.3s ease-in-out"
       }}
     >
       {/* The content element - either fixed or at the bottom of the container */}
       <div 
         ref={contentRef}
-        className="w-full"
+        className={`w-full transition-opacity duration-300 ${isInitialized ? 'opacity-100' : 'opacity-0'}`}
         style={{
           position: isFixed ? 'fixed' : hasReachedEnd ? 'absolute' : 'relative',
           top: isFixed ? 0 : 'auto',
           bottom: hasReachedEnd ? 0 : 'auto',
           left: 0,
           height: '100vh',
-          zIndex: 1, // Lower z-index to avoid overlapping with other elements
+          zIndex: isFixed ? 10 : 1, // Lower z-index when not fixed
           display: 'flex',
-          alignItems: 'center'
+          alignItems: 'center',
+          pointerEvents: isInitialized ? 'auto' : 'none' // Prevent interaction until initialized
         }}
       >
         {/* Content container */}

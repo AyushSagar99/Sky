@@ -3,10 +3,10 @@ import { AnimatedLink } from "./animatedLink"
 
 export default function TestimonialsAndGuides() {
   return (
-    <div className="w-full mt-20">
+    <div className="w-[90vw] items-center justify-center flex flex-col ml-15 mt-20">
       {/* Testimonials Section */}
       <div className="w-full bg-gradient-to-b from-zinc-900 to-green-800/70 text-white p-8 md:p-12 rounded-3xl">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8">
+        <div className="w-6xl mx-auto grid md:grid-cols-2 gap-8">
           {/* Left side - Heading and company logos */}
           <div className="space-y-8">
             <h2 className="text-5xl md:text-6xl font-bold">

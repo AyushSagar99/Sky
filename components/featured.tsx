@@ -51,24 +51,24 @@ const FeatureCard = ({ title, description, subtitle, imageSrc, className = "" }:
               <Image 
                 src={imageSrc} 
                 alt={title} 
-                className="max-h-16 w-auto"
-                width={154}
-                height={164}
+                className="max-h-32 w-auto" // Increased from max-h-16 to max-h-32
+                width={400}  // Increased from 254 to 400
+                height={400} // Increased from 364 to 400
               />
             ) : imageSrc ? (
-              <div className="max-h-16 flex items-center justify-center">
+              <div className="max-h-32 flex items-center justify-center"> 
                 <Image 
                   src={imageSrc} 
                   alt={title} 
-                  className="max-h-16 w-auto"
-                  width={154}
-                  height={164}
+                  className="max-h-32 w-auto" // Increased from max-h-16 to max-h-32
+                  width={400}  // Increased from 254 to 400
+                  height={400} // Increased from 364 to 400
                 />
               </div>
             ) : null}
           </div>
-          <div className="text-center">
-            <h3 className="text-lg font-medium mb-1">{title}</h3>
+          <div className="text-start">
+            <h3 className="text-xl font-medium mb-1">{title}</h3>
             {subtitle && (
               <p className="text-base text-gray-700">{subtitle}</p>
             )}
@@ -136,7 +136,7 @@ function Featured() {
       <div className="max-w-6xl mx-auto flex flex-col items-center">
         {/* Heading with subtle decoration */}
         <div className="relative mb-12">
-          <h2 className="text-5xl font-light relative z-10">Featured</h2>
+          <h2 className="text-6xl font-light relative z-10">Featured</h2>
           <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full"></div>
         </div>
         
@@ -145,8 +145,8 @@ function Featured() {
           <Image
             src={feature}
             alt="Featured partners"
-            width={500}
-            height={100}
+            width={700}
+            height={300}
             className="w-full h-auto"
             priority
           />
@@ -154,7 +154,7 @@ function Featured() {
         
         {/* Main content with proper spacing */}
         <div className="text-center mb-16">
-          <h3 className="text-4xl md:text-6xl font-light mb-4">
+          <h3 className="text-6xl md:text-6xl font-medium mb-4">
             Everything you need,
             <div className="bg-gradient-to-r from-blue-500 to-green-400 bg-clip-text text-transparent">
               in one platform

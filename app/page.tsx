@@ -14,6 +14,7 @@ import Featured from "@/components/featured"
 import AccountOpening from "@/components/trading"
 import TestimonialsAndGuides from "@/components/testimonial"
 import AnimatedCTA from "@/components/ready"
+import Footer from "@/components/footer"
 
 export default function Home() {
 
@@ -133,169 +134,184 @@ export default function Home() {
 
       {/* Add backdrop filter to navbar for glass effect */}
       <div className="sticky top-0 z-50">
-        <Navbar />
+        <Navbar  />
       </div>
 
       <motion.main 
-        className="container mx-auto px-4 pt-16 pb-24 relative z-10"
+        className="relative z-10"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <motion.section className="mb-20" variants={itemVariants}>
-          <div className="max-w-5xl">
-            <motion.h1 
-              className="text-4xl font-light tracking-tighter md:text-5xl lg:text-7xl"
+        {/* Top section with ml-17 */}
+        <div className="container ml-17 pt-16 pb-24">
+          <motion.section className="mb-20" variants={itemVariants}>
+            <div className="max-w-5xl">
+              <motion.h1 
+                className="text-4xl font-light tracking-tighter md:text-5xl lg:text-7xl"
+                variants={itemVariants}
+              >
+                <AuroraText>Limitless</AuroraText>
+              </motion.h1>
+              <motion.h1 
+                className="text-7xl font-light text-black mb-4"
+                variants={itemVariants}
+              >
+                Possibilities
+              </motion.h1>
+              <motion.p 
+                className="text-3xl text-gray-700 mb-8"
+                variants={itemVariants}
+              >
+                History of investments modernized.
+              </motion.p>
+
+              <motion.div 
+                className="flex flex-wrap gap-4"
+                variants={itemVariants}
+              >
+                <AnimatedLink href="#">Open an account</AnimatedLink>
+                <BlackToLimeLink href="#">Demo account</BlackToLimeLink>
+              </motion.div>
+            </div>
+          </motion.section>
+
+          <motion.section 
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            variants={itemVariants}
+          >
+            <motion.div 
+              className="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6"
               variants={itemVariants}
             >
-              <AuroraText>Limitless</AuroraText>
-            </motion.h1>
-            <motion.h1 
-              className="text-7xl font-light text-black mb-4"
-              variants={itemVariants}
-            >
-              Possibilities
-            </motion.h1>
-            <motion.p 
-              className="text-3xl text-gray-700 mb-8"
-              variants={itemVariants}
-            >
-              History of investments modernized.
-            </motion.p>
+              <motion.div variants={itemVariants}>
+                <StatCard 
+                  icon={<UsersIcon />} 
+                  value="900,000" 
+                  suffix="+" 
+                  description="traders and counting" 
+                  isNumeric={true}
+                />
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <StatCard 
+                  icon={<CalendarIcon />} 
+                  value="26" 
+                  suffix="+" 
+                  description="successful years in the industry" 
+                  isNumeric={true}
+                />
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <StatCard 
+                  icon={<Headset />} 
+                  value="24/7" 
+                  description="support" 
+                  subDescription="No breaks. No delays" 
+                  isNumeric={false}
+                />
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <StatCard 
+                  icon={<BadgeCheck />} 
+                  value="0.0" 
+                  suffix=" Pips" 
+                  description="Tightest Spreads" 
+                  isNumeric={true}
+                />
+              </motion.div>
+            </motion.div>
 
             <motion.div 
-              className="flex flex-wrap gap-4"
+              className="bg-gray-900/90 backdrop-blur-sm text-white rounded-3xl p-8 flex flex-col justify-between border border-gray-800"
               variants={itemVariants}
             >
-              <AnimatedLink href="#">Open an account</AnimatedLink>
-              <BlackToLimeLink href="#">Demo account</BlackToLimeLink>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        <motion.section 
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
-          variants={itemVariants}
-        >
-          <motion.div 
-            className="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6"
-            variants={itemVariants}
-          >
-            <motion.div variants={itemVariants}>
-              <StatCard 
-                icon={<UsersIcon />} 
-                value="900,000" 
-                suffix="+" 
-                description="traders and counting" 
-                isNumeric={true}
-              />
-            </motion.div>
-            <motion.div variants={itemVariants}>
-              <StatCard 
-                icon={<CalendarIcon />} 
-                value="26" 
-                suffix="+" 
-                description="successful years in the industry" 
-                isNumeric={true}
-              />
-            </motion.div>
-            <motion.div variants={itemVariants}>
-              <StatCard 
-                icon={<Headset />} 
-                value="24/7" 
-                description="support" 
-                subDescription="No breaks. No delays" 
-                isNumeric={false}
-              />
-            </motion.div>
-            <motion.div variants={itemVariants}>
-              <StatCard 
-                icon={<BadgeCheck />} 
-                value="0.0" 
-                suffix=" Pips" 
-                description="Tightest Spreads" 
-                isNumeric={true}
-              />
-            </motion.div>
-          </motion.div>
-
-          <motion.div 
-            className="bg-gray-900/90 backdrop-blur-sm text-white rounded-3xl p-8 flex flex-col justify-between border border-gray-800"
-            variants={itemVariants}
-          >
-            <div>
-              <motion.h2 
-                className="text-3xl font-light mb-2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                key={currentContent.title}
-                transition={{ duration: 0.5 }}
-              >
-                {currentContent.title}
-              </motion.h2>
-              <motion.h3 
-                className="text-3xl font-light mb-6 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                key={currentContent.subtitle}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                {currentContent.subtitle}
-              </motion.h3>
-              <motion.p 
-                className="text-gray-300 mb-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                key={currentContent.description}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                {currentContent.description}
-              </motion.p>
-            </div>
-
-            <div className="flex items-center justify-between mt-8">
-              <button className="bg-gray-800 hover:bg-gray-700 rounded-full px-4 py-2 flex items-center gap-2">
-                <span className="h-6 w-6 bg-gray-600 rounded-full flex items-center justify-center">
-                  <ArrowRight className="h-4 w-4" />
-                </span>
-                <span>Explore Market Insights</span>
-              </button>
-
-              <div className="flex gap-2">
-                <button 
-                  className="h-10 w-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center"
-                  onClick={handlePrev}
+              <div>
+                <motion.h2 
+                  className="text-3xl font-light mb-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  key={currentContent.title}
+                  transition={{ duration: 0.5 }}
                 >
-                  <ArrowLeft className="h-5 w-5" />
-                </button>
-                <button 
-                  className="h-10 w-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center"
-                  onClick={handleNext}
+                  {currentContent.title}
+                </motion.h2>
+                <motion.h3 
+                  className="text-3xl font-light mb-6 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  key={currentContent.subtitle}
+                  transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  <ArrowRight className="h-5 w-5" />
-                </button>
+                  {currentContent.subtitle}
+                </motion.h3>
+                <motion.p 
+                  className="text-gray-300 mb-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  key={currentContent.description}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  {currentContent.description}
+                </motion.p>
               </div>
+
+              <div className="flex items-center justify-between mt-8">
+                <button className="bg-gray-800 hover:bg-gray-700 rounded-full px-4 py-2 flex items-center gap-2">
+                  <span className="h-6 w-6 bg-gray-600 rounded-full flex items-center justify-center">
+                    <ArrowRight className="h-4 w-4" />
+                  </span>
+                  <span>Explore Market Insights</span>
+                </button>
+
+                <div className="flex gap-2">
+                  <button 
+                    className="h-10 w-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center"
+                    onClick={handlePrev}
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                  </button>
+                  <button 
+                    className="h-10 w-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center"
+                    onClick={handleNext}
+                  >
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.section>
+          
+          {/* Fixed Scroll Reveal section with adjusted link */}
+          <motion.div 
+            className="mt-20 mb-20"
+            variants={itemVariants}
+          >
+            <FixedScrollReveal />
+            <div className="flex justify-center mt-10">
+              <AnimatedLink href="#">Open an account</AnimatedLink>
             </div>
           </motion.div>
-        </motion.section>
+        </div>
         
-        {/* Fixed Scroll Reveal section with adjusted link */}
-        <motion.div 
-          className="mt-20 mb-20"
-          variants={itemVariants}
-        >
-          <FixedScrollReveal />
-          <div className="flex justify-center mt-10">
-            <AnimatedLink href="#">Open an account</AnimatedLink>
+        {/* Gray background section with extended bottom margin */}
+        <div className="relative" >
+          {/* Extended absolute background */}
+          <div className="absolute inset-0 bg-gray-50" ></div>
+          
+          {/* Content container with proper spacing */}
+          <div className="relative container ml-17 ">
+            <AccountSelection options={accountOptions} />
+            <Asset/>
+            <Featured/>
+            <AccountOpening/>
+            <TestimonialsAndGuides/>
+            <div className=" ">
+              <AnimatedCTA/>
+            </div>
+            <Footer/>
           </div>
-
-          <AccountSelection options={accountOptions} />
-          <Asset/>
-          <Featured/>
-          <AccountOpening/>
-          <TestimonialsAndGuides/>
-          <AnimatedCTA/>
-        </motion.div>
+        </div>
       </motion.main>
     </div>
   )
