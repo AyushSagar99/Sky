@@ -14,7 +14,8 @@ export default function FixedScrollReveal() {
   const containerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
-  const [isFixed, setIsFixed] = useState(true)
+  const [isFixed, setIsFixed] = useState(false)
+  const [hasReachedEnd, setHasReachedEnd] = useState(false)
 
   // Feature sections data
   const sections: FeatureSection[] = [
@@ -45,33 +46,36 @@ export default function FixedScrollReveal() {
     const handleScroll = () => {
       if (!containerRef.current) return
       
-      const containerOffsetTop = containerRef.current.offsetTop
+      const containerRect = containerRef.current.getBoundingClientRect()
+      const containerTop = containerRef.current.offsetTop
+      const containerHeight = containerRef.current.offsetHeight
+      const windowHeight = window.innerHeight
       const scrollY = window.scrollY
       
-      // Start position (when the container reaches the top of the viewport)
-      const startPosition = containerOffsetTop
+      // Calculate if we're inside the container's scroll area
+      const isInScrollArea = scrollY >= containerTop && scrollY < containerTop + containerHeight - windowHeight
       
-      // End position (when we should stop fixing the content)
-      const sectionHeight = window.innerHeight * 0.8
-      const endPosition = startPosition + (sections.length * sectionHeight)
+      // Check if we've reached the end of the container
+      const hasReachedEnd = scrollY >= containerTop + containerHeight - windowHeight
+      setHasReachedEnd(hasReachedEnd)
       
-      // Current scroll position relative to the container
-      const relativeScroll = scrollY - startPosition
+      // Only fix position when we're inside the scroll area
+      setIsFixed(isInScrollArea)
       
-      // Determine if the content should be fixed
-      if (scrollY >= startPosition && scrollY < endPosition) {
-        setIsFixed(true)
+      // Calculate which section should be active based on scroll position
+      if (isInScrollArea || hasReachedEnd) {
+        // Calculate relative progress through the container (0 to 1)
+        const scrollProgress = Math.min(1, Math.max(0, (scrollY - containerTop) / (containerHeight - windowHeight)))
         
-        // Calculate which section should be active
-        const sectionIndex = Math.floor(relativeScroll / sectionHeight)
-        setActiveIndex(Math.min(sectionIndex, sections.length - 1))
-      } else if (scrollY >= endPosition) {
-        // We've scrolled past all sections, unfix the content
-        setIsFixed(false)
-        setActiveIndex(sections.length - 1)
+        // Map scroll progress to section index
+        const newActiveIndex = Math.min(
+          sections.length - 1,
+          Math.floor(scrollProgress * sections.length)
+        )
+        
+        setActiveIndex(newActiveIndex)
       } else {
-        // We're above the container
-        setIsFixed(false)
+        // Before the scroll area, set to first section
         setActiveIndex(0)
       }
     }
@@ -87,32 +91,38 @@ export default function FixedScrollReveal() {
       ref={containerRef}
       className="relative"
       style={{ 
-        height: `${(sections.length * 80) }vh`,
-        marginBottom: "20vh"
+        height: `${(sections.length * 80)}vh`,
+        marginBottom: "20vh" // Add bottom margin to avoid overlapping with next components
       }}
     >
+      {/* The content element - either fixed or at the bottom of the container */}
       <div 
         ref={contentRef}
-        className={`w-full ${
-          isFixed ? 'fixed top-0 left-0' : 'relative'
-        } h-screen flex items-center`}
+        className="w-full"
         style={{
-          zIndex: 20
+          position: isFixed ? 'fixed' : hasReachedEnd ? 'absolute' : 'relative',
+          top: isFixed ? 0 : 'auto',
+          bottom: hasReachedEnd ? 0 : 'auto',
+          left: 0,
+          height: '100vh',
+          zIndex: 1, // Lower z-index to avoid overlapping with other elements
+          display: 'flex',
+          alignItems: 'center'
         }}
       >
         {/* Content container */}
         <div className="w-full bg-transparent px-4 py-16">
-        <div className="flex justify-center items-center">
-  <p className="text-6xl text-center font-light flex flex-col">
-    <span>
-      What sets{" "}
-      <span className="bg-gradient-to-r from-blue-500 to-green-400 bg-clip-text text-transparent">
-        Skyriss
-      </span>
-    </span>
-    <span>apart?</span>
-  </p>
-</div>
+          <div className="flex justify-center items-center">
+            <p className="text-6xl text-center font-light flex flex-col">
+              <span>
+                What sets{" "}
+                <span className="bg-gradient-to-r from-blue-500 to-green-400 bg-clip-text text-transparent">
+                  Skyriss
+                </span>
+              </span>
+              <span>apart?</span>
+            </p>
+          </div>
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             {/* Left side with iPhone image */}
             <div className="hidden md:flex h-[500px] items-center justify-center">
@@ -162,6 +172,11 @@ export default function FixedScrollReveal() {
           </div>
         </div>
       </div>
+      
+      {/* Add placeholder space at the top for when content is fixed */}
+      {isFixed && (
+        <div style={{ height: '100vh' }}></div>
+      )}
     </div>
   )
 }
