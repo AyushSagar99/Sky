@@ -11,6 +11,7 @@ import FixedScrollReveal from "@/components/scrollReveal"
 import { AccountSelection } from "@/components/accountS"
 import Asset from "@/components/asset"
 import Featured from "@/components/featured"
+import AccountOpening from "@/components/trading"
 
 export default function Home() {
 
@@ -289,6 +290,7 @@ export default function Home() {
           <AccountSelection options={accountOptions} />
           <Asset/>
           <Featured/>
+          <AccountOpening/>
         </motion.div>
       </motion.main>
     </div>
