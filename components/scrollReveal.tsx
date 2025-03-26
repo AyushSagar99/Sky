@@ -18,6 +18,7 @@ export default function FixedScrollReveal() {
   const [hasReachedEnd, setHasReachedEnd] = useState(false)
   const [isInitialized, setIsInitialized] = useState(false)
   const [isInView, setIsInView] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   // Feature sections data
   const sections: FeatureSection[] = [
@@ -43,6 +44,23 @@ export default function FixedScrollReveal() {
     }
   ]
 
+  // Check for mobile viewport on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkMobile();
+    
+    // Add resize listener
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+
   // Setup intersection observer to detect when the component is in view
   useEffect(() => {
     if (!containerRef.current) return;
@@ -55,7 +73,7 @@ export default function FixedScrollReveal() {
       {
         root: null,
         rootMargin: "0px",
-        threshold: 0.01, // Trigger when at least 10% of the element is visible
+        threshold: 0.01, // Trigger when even a small part of the element is visible
       }
     );
 
@@ -156,8 +174,9 @@ export default function FixedScrollReveal() {
       ref={containerRef}
       className="relative opacity-100" // Always keep the container visible
       style={{ 
-        height: `${(sections.length * 80)}vh`,
-        marginBottom: "20vh", // Add bottom margin to avoid overlapping with next components
+        // Reduce height for mobile to avoid excessive scrolling
+        height: isMobile ? `${(sections.length * 60)}vh` : `${(sections.length * 80)}vh`,
+        marginBottom: isMobile ? "10vh" : "20vh", // Less bottom margin on mobile
       }}
     >
       {/* The content element - only visible when in viewport */}
@@ -178,9 +197,9 @@ export default function FixedScrollReveal() {
         }}
       >
         {/* Content container */}
-        <div className="w-full bg-transparent px-4 py-16">
+        <div className="w-full bg-transparent px-4 py-8 md:py-16">
           <div className="flex justify-center items-center">
-            <p className="text-6xl text-center font-light flex flex-col">
+            <p className="text-3xl sm:text-4xl md:text-6xl text-center font-light flex flex-col">
               <span>
                 What sets{" "}
                 <span className="bg-gradient-to-r from-blue-500 to-green-400 bg-clip-text text-transparent">
@@ -190,9 +209,23 @@ export default function FixedScrollReveal() {
               <span>apart?</span>
             </p>
           </div>
-          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            {/* Left side with iPhone image */}
-            <div className="hidden md:flex h-[500px] items-center justify-center">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center mt-6 md:mt-0">
+            {/* Left side with iPhone image - shown at bottom on mobile */}
+            <div className="order-2 md:order-1 flex md:hidden h-[200px] sm:h-[300px] md:h-[500px] items-center justify-center mt-4">
+              <div className="w-full h-full rounded-3xl flex items-center justify-center">
+                <Image
+                  src={iphone16}
+                  alt="iphone"
+                  width={280}
+                  height={300}
+                  className="w-auto h-full object-contain"
+                  priority
+                />
+              </div>
+            </div>
+            
+            {/* iPhone image for desktop only */}
+            <div className="hidden md:flex order-1 h-[500px] items-center justify-center">
               <div className="w-full h-full rounded-3xl flex items-center justify-center">
                 <Image
                   src={iphone16}
@@ -205,8 +238,8 @@ export default function FixedScrollReveal() {
             </div>
             
             {/* Right side with text content */}
-            <div className="h-[500px] relative flex items-center justify-center md:justify-start">
-              <div className="relative w-full max-w-md mx-auto md:mx-0">
+            <div className="order-1 md:order-2 h-[250px] sm:h-[300px] md:h-[500px] relative flex items-center justify-center md:justify-start">
+              <div className="relative w-full max-w-md mx-auto md:mx-0 px-4 md:px-0">
                 {sections.map((section, index) => (
                   <motion.div
                     key={index}
@@ -218,14 +251,14 @@ export default function FixedScrollReveal() {
                     transition={{ duration: 0.5, ease: "easeOut" }}
                     className={`absolute inset-0 ${activeIndex === index ? 'pointer-events-auto' : 'pointer-events-none'}`}
                   >
-                    <h2 className="text-3xl md:text-4xl font-light mb-3">{section.title}</h2>
-                    <p className="text-lg text-gray-500">{section.subtitle}</p>
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-light mb-2 md:mb-3">{section.title}</h2>
+                    <p className="text-sm sm:text-base md:text-lg text-gray-500">{section.subtitle}</p>
                   </motion.div>
                 ))}
               </div>
               
-              {/* Progress indicator */}
-              <div className="absolute right-4 md:right-8 flex flex-col gap-2">
+              {/* Progress indicator - repositioned for mobile */}
+              <div className={`absolute ${isMobile ? 'bottom-0 right-1/2 transform translate-x-1/2 flex-row' : 'right-4 md:right-8 flex-col'} flex gap-2`}>
                 {sections.map((_, index) => (
                   <div 
                     key={index}

@@ -8,9 +8,23 @@ export default function AccountOpening() {
   const [tiltAngle, setTiltAngle] = useState({ x: 0, y: 0 });
   const [lockTiltAngle, setLockTiltAngle] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const lockRef = useRef<HTMLDivElement>(null);
   const tiltMax = 15; // Maximum tilt angle for container
   const lockTiltMax = 25; // Maximum tilt angle for lock (more pronounced)
+  
+  // Detect mobile devices
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Set initial value
+    handleResize();
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   useEffect(() => {
     // Set up intersection observer for entrance animation
@@ -40,6 +54,9 @@ export default function AccountOpening() {
   }, []);
   
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Skip tilt effect on mobile
+    if (isMobile) return;
+    
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left; // x position within the element
     const y = e.clientY - rect.top; // y position within the element
@@ -67,19 +84,35 @@ export default function AccountOpening() {
     setLockTiltAngle({ x: 0, y: 0 });
   };
 
+  // For mobile, use a simpler animation without mouse tracking
+  useEffect(() => {
+    if (isMobile && isVisible) {
+      // Add a gentle bobbing animation for mobile
+      const interval = setInterval(() => {
+        setLockTiltAngle({
+          x: Math.sin(Date.now() / 1000) * 2, // Gentle bobbing
+          y: Math.cos(Date.now() / 1500) * 2, // Gentle rotation
+        });
+      }, 50);
+      
+      return () => clearInterval(interval);
+    }
+  }, [isMobile, isVisible]);
+
   return (
-    <div className="w-screen p-6 ">
-      <div className="text-center mb-12">
-        <h1 className="text-6xl font-light mb-2">Open your account.</h1>
-        <h2 className="text-6xl font-light">
+    <div className="w-full px-4 sm:px-6 py-8 sm:py-12 md:py-16 overflow-hidden">
+      <div className="text-center mb-8 sm:mb-12">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-light mb-2">Open your account.</h1>
+        <h2 className="text-3xl sm:text-4xl md:text-6xl font-light">
           It is that <span className="text-blue-300">simple</span>
         </h2>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 items-center">
-        <div className="flex justify-center">
+        {/* Image section - order changed for mobile */}
+        <div className="flex justify-center order-2 md:order-1">
           <div 
-            className="relative w-110 h-94 flex items-center justify-center overflow-visible"
+            className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-110 md:h-94 flex items-center justify-center overflow-visible"
             style={{ 
               transform: `perspective(1000px) rotateX(${tiltAngle.x}deg) rotateY(${tiltAngle.y}deg)`,
               transition: tiltAngle.x === 0 && tiltAngle.y === 0 ? 'transform 0.5s ease-out' : 'none'
@@ -92,7 +125,7 @@ export default function AccountOpening() {
               alt="background"
               width={550}
               height={500}
-              className="absolute"
+              className="absolute w-full h-full object-contain"
             />
             <div 
               ref={lockRef}
@@ -111,45 +144,48 @@ export default function AccountOpening() {
                 width={305}
                 height={305}
                 alt="Security lock with fingerprint"
-                className="object-contain"
+                className="object-contain w-48 h-48 sm:w-64 sm:h-64 md:w-auto md:h-auto"
                 priority
               />
             </div>
           </div>
         </div>
 
-        <div className="space-y-10">
-          <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-10 h-10 bg-green-400 rounded-full flex items-center justify-center text-black font-bold">
+        {/* Steps section - moved to top for mobile */}
+        <div className="space-y-6 sm:space-y-8 md:space-y-10 order-1 md:order-2">
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 bg-green-400 rounded-full flex items-center justify-center text-black font-bold text-sm sm:text-base">
               1
             </div>
             <div>
-              <h3 className="text-2xl font-bold">Complete the application</h3>
-              <p className="text-gray-600 text-lg">It only takes a few minutes.</p>
+              <h3 className="text-xl sm:text-2xl font-bold">Complete the application</h3>
+              <p className="text-gray-600 text-base sm:text-lg">It only takes a few minutes.</p>
             </div>
           </div>
 
-          <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-10 h-10 bg-green-400 rounded-full flex items-center justify-center text-black font-bold">
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 bg-green-400 rounded-full flex items-center justify-center text-black font-bold text-sm sm:text-base">
               2
             </div>
             <div>
-              <h3 className="text-2xl font-bold">Fund your account</h3>
-              <p className="text-gray-600 text-lg">Transfer funds using a variety of funding methods.</p>
+              <h3 className="text-xl sm:text-2xl font-bold">Fund your account</h3>
+              <p className="text-gray-600 text-base sm:text-lg">Transfer funds using a variety of funding methods.</p>
             </div>
           </div>
 
-          <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-10 h-10 bg-green-400 rounded-full flex items-center justify-center text-black font-bold">
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 bg-green-400 rounded-full flex items-center justify-center text-black font-bold text-sm sm:text-base">
               3
             </div>
             <div>
-              <h3 className="text-2xl font-bold">Start trading</h3>
-              <p className="text-gray-600 text-lg">Take your investment to the next level.</p>
+              <h3 className="text-xl sm:text-2xl font-bold">Start trading</h3>
+              <p className="text-gray-600 text-base sm:text-lg">Take your investment to the next level.</p>
             </div>
           </div>
-          <div className="w-19">
-          <AnimatedLink href="#">Open an account</AnimatedLink>
+          
+          {/* CTA button - full width on mobile */}
+          <div className="w-full sm:w-auto">
+            <AnimatedLink href="#" className="w-full sm:w-auto justify-center sm:justify-between">Open an account</AnimatedLink>
           </div>
         </div>
       </div>
