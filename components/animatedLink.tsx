@@ -71,7 +71,13 @@ export function AnimatedLink({
         )}
       </AnimatePresence>
       
-      <span className="text-lg hover:ml-3.5">{children}</span>
+      <motion.span 
+        className="text-lg"
+        animate={{ marginLeft: isHovered ? "1.25rem" : "0" }}
+        transition={{ duration: 0.2 }}
+      >
+        {children}
+      </motion.span>
     </Link>
   )
 }

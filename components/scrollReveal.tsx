@@ -17,6 +17,7 @@ export default function FixedScrollReveal() {
   const [isFixed, setIsFixed] = useState(false)
   const [hasReachedEnd, setHasReachedEnd] = useState(false)
   const [isInitialized, setIsInitialized] = useState(false)
+  const [isInView, setIsInView] = useState(false)
 
   // Feature sections data
   const sections: FeatureSection[] = [
@@ -42,9 +43,33 @@ export default function FixedScrollReveal() {
     }
   ]
 
+  // Setup intersection observer to detect when the component is in view
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        setIsInView(entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.01, // Trigger when at least 10% of the element is visible
+      }
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
   // Handle initial load state
   useEffect(() => {
-    // Delay initialization slightly to ensure DOM is fully loaded
     const timer = setTimeout(() => {
       setIsInitialized(true);
     }, 100);
@@ -52,49 +77,50 @@ export default function FixedScrollReveal() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle scroll to change active section and manage fixed position
+  // Handle scroll events
   useEffect(() => {
     if (!isInitialized) return;
 
     const handleScroll = () => {
-      if (!containerRef.current) return
+      if (!containerRef.current) return;
       
-      const containerTop = containerRef.current.offsetTop
-      const containerHeight = containerRef.current.offsetHeight
-      const windowHeight = window.innerHeight
-      const scrollY = window.scrollY
+      const containerTop = containerRef.current.offsetTop;
+      const containerHeight = containerRef.current.offsetHeight;
+      const windowHeight = window.innerHeight;
+      const scrollY = window.scrollY;
       
       // Calculate if we're inside the container's scroll area
-      const isInScrollArea = scrollY >= containerTop && scrollY < containerTop + containerHeight - windowHeight
+      const isInScrollArea = scrollY >= containerTop && scrollY < containerTop + containerHeight - windowHeight;
       
       // Check if we've reached the end of the container
-      const hasReachedEnd = scrollY >= containerTop + containerHeight - windowHeight
-      setHasReachedEnd(hasReachedEnd)
+      const reachedEnd = scrollY >= containerTop + containerHeight - windowHeight;
+      setHasReachedEnd(reachedEnd);
       
       // Only fix position when we're inside the scroll area
-      setIsFixed(isInScrollArea)
+      setIsFixed(isInScrollArea);
       
       // Calculate which section should be active based on scroll position
-      if (isInScrollArea || hasReachedEnd) {
+      if (isInScrollArea || reachedEnd) {
         // Calculate relative progress through the container (0 to 1)
-        const scrollProgress = Math.min(1, Math.max(0, (scrollY - containerTop) / (containerHeight - windowHeight)))
+        const scrollProgress = Math.min(1, Math.max(0, (scrollY - containerTop) / (containerHeight - windowHeight)));
         
         // Map scroll progress to section index
         const newActiveIndex = Math.min(
           sections.length - 1,
           Math.floor(scrollProgress * sections.length)
-        )
+        );
         
-        setActiveIndex(newActiveIndex)
+        setActiveIndex(newActiveIndex);
       } else {
         // Before the scroll area, set to first section
-        setActiveIndex(0)
+        setActiveIndex(0);
       }
-    }
+    };
     
-    window.addEventListener('scroll', handleScroll)
-    // Initialize on mount, but only after component is initialized
-    handleScroll()
+    window.addEventListener('scroll', handleScroll);
+    
+    // Initial check
+    handleScroll();
     
     // Force a second check after a slight delay to account for any layout shifts
     const timer = setTimeout(() => {
@@ -104,34 +130,36 @@ export default function FixedScrollReveal() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       clearTimeout(timer);
-    }
-  }, [sections.length, isInitialized])
+    };
+  }, [sections.length, isInitialized]);
+
+  // Determine if the content should be visible
+  const shouldShowContent = isInView && isInitialized;
 
   return (
     <div 
       ref={containerRef}
-      className="relative"
+      className="relative opacity-100" // Always keep the container visible
       style={{ 
         height: `${(sections.length * 80)}vh`,
         marginBottom: "20vh", // Add bottom margin to avoid overlapping with next components
-        opacity: isInitialized ? 1 : 0, // Hide until initialized
-        transition: "opacity 0.3s ease-in-out"
       }}
     >
-      {/* The content element - either fixed or at the bottom of the container */}
+      {/* The content element - only visible when in viewport */}
       <div 
         ref={contentRef}
-        className={`w-full transition-opacity duration-300 ${isInitialized ? 'opacity-100' : 'opacity-0'}`}
+        className={`w-full transition-opacity duration-300 ${shouldShowContent ? 'opacity-100' : 'opacity-0'}`}
         style={{
           position: isFixed ? 'fixed' : hasReachedEnd ? 'absolute' : 'relative',
           top: isFixed ? 0 : 'auto',
           bottom: hasReachedEnd ? 0 : 'auto',
           left: 0,
           height: '100vh',
-          zIndex: isFixed ? 10 : 1, // Lower z-index when not fixed
+          zIndex: isFixed ? 10 : 1,
           display: 'flex',
           alignItems: 'center',
-          pointerEvents: isInitialized ? 'auto' : 'none' // Prevent interaction until initialized
+          visibility: shouldShowContent ? 'visible' : 'hidden', // Hide completely when not in view
+          pointerEvents: shouldShowContent ? 'auto' : 'none'
         }}
       >
         {/* Content container */}

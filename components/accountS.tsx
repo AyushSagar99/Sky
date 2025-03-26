@@ -1,6 +1,7 @@
 import { Check, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
+import { AnimatedLink } from "./animatedLink"
 
 interface AccountFeature {
   text: string
@@ -74,15 +75,7 @@ export function AccountSelection({
               ))}
             </div>
 
-            <button className={cn(
-              "flex items-center justify-center rounded-full font-medium py-3 px-6 w-full transition-colors duration-300",
-              shouldHighlight(option) 
-                ? "bg-lime-400 hover:bg-lime-500 text-black" 
-                : "bg-blue-100 hover:bg-blue-200 text-blue-800"
-            )}>
-              Open an account
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </button>
+            <AnimatedLink href="#">Open a account</AnimatedLink>
           </div>
         ))}
       </div>
