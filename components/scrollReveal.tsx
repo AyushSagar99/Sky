@@ -59,12 +59,15 @@ export default function FixedScrollReveal() {
       }
     );
 
-    observer.observe(containerRef.current);
+    // Store the current value of the ref
+    const currentContainer = containerRef.current;
+    
+    observer.observe(currentContainer);
 
     return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
-      }
+      // Use the stored reference in the cleanup
+      observer.unobserve(currentContainer);
+      observer.disconnect();
     };
   }, []);
   
@@ -154,7 +157,7 @@ export default function FixedScrollReveal() {
       className="relative opacity-100" // Always keep the container visible
       style={{ 
         height: `${(sections.length * 80)}vh`,
-        marginBottom: "5vh", // Add bottom margin to avoid overlapping with next components
+        marginBottom: "20vh", // Add bottom margin to avoid overlapping with next components
       }}
     >
       {/* The content element - only visible when in viewport */}

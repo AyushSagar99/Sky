@@ -23,12 +23,19 @@ export default function AccountOpening() {
       }
     }, { threshold: 0.1 }); // Trigger when at least 10% is visible
     
-    if (lockRef.current) {
-      observer.observe(lockRef.current);
+    // Store the current value of the ref
+    const currentLockRef = lockRef.current;
+    
+    if (currentLockRef) {
+      observer.observe(currentLockRef);
     }
     
     return () => {
-      if (lockRef.current) observer.disconnect();
+      // Use the stored reference in the cleanup
+      if (currentLockRef) observer.unobserve(currentLockRef);
+      
+      // It's also good practice to disconnect the observer
+      observer.disconnect();
     };
   }, []);
   
