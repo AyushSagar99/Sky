@@ -176,7 +176,7 @@ export default function FixedScrollReveal() {
       style={{ 
         // Reduce height for mobile to avoid excessive scrolling
         height: isMobile ? `${(sections.length * 60)}vh` : `${(sections.length * 80)}vh`,
-        marginBottom: isMobile ? "10vh" : "20vh", // Less bottom margin on mobile
+        marginBottom: isMobile ? "10vh" : "2vh", // Less bottom margin on mobile
       }}
     >
       {/* The content element - only visible when in viewport */}
