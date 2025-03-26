@@ -67,6 +67,18 @@ export default function FixedScrollReveal() {
       }
     };
   }, []);
+  
+  // Fix scroll position only if needed
+  useEffect(() => {
+    // Only run this on client-side
+    if (typeof window !== 'undefined') {
+      // Check if we're very close to the top but not exactly at it
+      // This fixes the issue where reloading near the top might scroll down
+      if (window.scrollY > 0 && window.scrollY < 100) {
+        window.scrollTo(0, 0);
+      }
+    }
+  }, []);
 
   // Handle initial load state
   useEffect(() => {
@@ -142,7 +154,7 @@ export default function FixedScrollReveal() {
       className="relative opacity-100" // Always keep the container visible
       style={{ 
         height: `${(sections.length * 80)}vh`,
-        marginBottom: "20vh", // Add bottom margin to avoid overlapping with next components
+        marginBottom: "5vh", // Add bottom margin to avoid overlapping with next components
       }}
     >
       {/* The content element - only visible when in viewport */}

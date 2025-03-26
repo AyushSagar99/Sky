@@ -284,11 +284,11 @@ export default function Home() {
           
           {/* Fixed Scroll Reveal section with adjusted link */}
           <motion.div 
-            className="mt-20 mb-20"
+            className="mt-20 "
             variants={itemVariants}
           >
             <FixedScrollReveal />
-            <div className="flex justify-center mt-10">
+            <div className="flex justify-center">
               <AnimatedLink href="#">Open an account</AnimatedLink>
             </div>
           </motion.div>
